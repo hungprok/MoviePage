@@ -96,9 +96,10 @@ function Render() {
           <ReactModal
           onRequestClose={() => setModal(false)}
             isOpen={modal}
+            closeTimeoutMS={200}
             style={{
               overlay: { display: "flex", justifyContent: "center" },
-              content: { width: "70%", height: "70%", position: "relative" }
+              content: { width: "70%", height: "70%", position: "relative" },
             }}
           >
             <YouTube video={key} width='100%' height='100%' autoplay />
