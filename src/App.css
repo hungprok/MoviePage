@@ -28,6 +28,26 @@
     color: #61dafb;
 }
 
+.ReactModal__Content {
+    overflow: hidden!important;
+    padding: 0px!important;
+}
+
+.ReactModal__Overlay {
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+    align-self: center;
+}
+
+.ReactModal__Overlay--after-open{
+    opacity: 1;
+}
+
+.ReactModal__Overlay--before-close{
+    opacity: 0;
+}
+
+
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);
