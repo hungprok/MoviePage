@@ -6,14 +6,40 @@ import LatestMovie from './Component/LatestMovie';
 import Slider from './Component/Slider';
 import MainPage from './Component/MainPage';
 import DropDown from './Component/DropDown';
+import ReactModal from 'react-modal';
+import YouTube from '@u-wave/react-youtube';
 
 let keyword = "";
 
 function Render() {
+  let [modal, setModal] = useState(false);
+  let [movietrailer, setTrailer] = useState([]);
   let [movieInfo, setmovieInfo] = useState(null);
+  let [key, setKey] = useState('');
   let mainPageNumber = 1;
   let sortType = "popularity";
   const api = "5c4d91615c827590b1f7965784c32a2c";
+
+let onhandleSetModal = idcard => {
+  turnModal(idcard)
+}
+
+let turnModal = async (id) => {
+  console.log(id)
+  let url = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${api}&language=en-US`;
+  let data = await fetch(url);
+  let response = await data.json();
+  let result = response.results;
+  if (result && result !== []) {setTrailer(result)} else {turnModal(id)}
+  trailer();
+  setModal(true);
+};
+
+  let trailer = () => {
+    let keychoice = movietrailer
+    console.log(keychoice);
+    // setKey(keychoice.key)
+  }
 
   let changePage = (newPageNum) => {
     mainPageNumber = newPageNum;
@@ -42,12 +68,12 @@ function Render() {
 
 
   let fetchMovieInfo = async () => {
-    let url =`https://api.themoviedb.org/3/discover/movie?api_key=${api}&language=en-US&sort_by=${sortType}.${sortBy}&page=${mainPageNumber}`;
+    let url = `https://api.themoviedb.org/3/discover/movie?api_key=${api}&language=en-US&sort_by=${sortType}.${sortBy}&page=${mainPageNumber}`;
     let data = await fetch(url);
     let result = await data.json();
 
-    console.log(mainPageNumber);
-    console.log(result);
+    // console.log(mainPageNumber);
+    // console.log(result);
     setmovieInfo(result);
   }
   useEffect(fetchMovieInfo, []);
@@ -55,7 +81,7 @@ function Render() {
   if (!movieInfo) {
     return <div>Loading</div>
   };
-  
+
   return (<div>
     <div style={{ backgroundColor: "#333333" }}>
       <nav className="navbar justify-content-between " style={{ backgroundImage: "linear-gradient(#00000090,#333333)", height: 100 }}>
@@ -99,7 +125,10 @@ function Render() {
               </div>
             </div>
             <div className="row m-0 p-0 justify-content-between ">
-              <MovieCard MovieInformation={movieInfo.results} />
+              <MovieCard MovieInformation={movieInfo.results} onhandleSetModal={onhandleSetModal}/>
+              <ReactModal video={key} isOpen={modal} onRequestClose={()=>setModal(false)} style={{overlay:{width: "70%", height: "70%"}, contents:{}}}>
+              <YouTube video="x2to0hs" autoplay/>
+              </ReactModal>
             </div>
             <div class="row m-0 p-0 mt-1 d-flex justify-content-end">
               <MainPage PassFunction={changePage} />
